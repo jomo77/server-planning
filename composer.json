@@ -1,0 +1,27 @@
+{
+    "name": "jomo77/server-planning",
+    "description": "A PHP library that returns the number of servers that is required, to host a non-empty collection of virtual machines.",
+    "keywords": ["server", "vm", "composer", "package"],
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "David Jung",
+            "email": "david.jung@gmx.net"
+        }
+    ],
+    "type": "project",
+    "require": {
+		"php": ">=7.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8"
+    },
+    "autoload": {
+        "psr-4": {
+            "Jomo77\\ServerPlanning\\": "src/"
+        },
+        "classmap": [
+            "src/"
+        ]
+    }
+}
