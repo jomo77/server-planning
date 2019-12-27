@@ -10,8 +10,8 @@
         }
     ],
     "type": "project",
-    "minimum-stability": "dev",
-    "prefer-stable": true,
+    "minimum-stability": "stable",
+    "version": "1.0.0",
     "require": {
 		"php": ">=7.4"
     },
