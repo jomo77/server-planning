@@ -48,7 +48,7 @@ class ServerResource
      *
      * @return boolean
      */
-    public function subtractResource(ServerResource $resource)
+    public function subtractResource(ServerResource $resource) : bool
     {
         $this->cpu -= $resource->cpu;
         $this->ram -= $resource->ram;
@@ -66,7 +66,7 @@ class ServerResource
      *
      * @return boolean
      */
-    public function fits(ServerResource $resource)
+    public function fits(ServerResource $resource) : bool
     {
         return ($this->cpu >= $resource->cpu && $this->ram >= $resource->ram && $this->hdd >= $resource->hdd);
     }

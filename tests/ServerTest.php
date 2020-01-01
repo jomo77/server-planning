@@ -1,8 +1,7 @@
 <?php
 
-use Jomo77\ServerPlanning\Server;
-use Jomo77\ServerPlanning\ServerResource;
-use Jomo77\ServerPlanning\VM;
+use Jomo77\ServerPlanning\Factories\ServerFactory;
+use Jomo77\ServerPlanning\Factories\VMFactory;
 use PHPUnit\Framework\TestCase;
 
 final class ServerTest extends TestCase
@@ -12,8 +11,7 @@ final class ServerTest extends TestCase
      */
     public function testIsThereAnySyntaxError()
     {
-        $serverResource = new ServerResource(1,2,3);
-        $var = new Server($serverResource);
+        $var = ServerFactory::create(1,2,3);
         $this->assertTrue(is_object($var));
         unset($var);
     }
@@ -23,8 +21,7 @@ final class ServerTest extends TestCase
      */
     public function ifResourceSet()
     {
-        $serverResource = new ServerResource(5,2,3);
-        $var = new Server($serverResource);
+        $var = ServerFactory::create(5,2,3);
         $this->assertTrue($var == 'Server -> CPU 5 | RAM 2 | HDD 3 / Available -> CPU 5 | RAM 2 | HDD 3');
         unset($var);
     }
@@ -35,10 +32,10 @@ final class ServerTest extends TestCase
      */
     public function subtractResource()
     {
-        $server = new Server(new ServerResource(10,10,10));
+        $server = ServerFactory::create(10,10,10);
         $this->assertTrue($server == 'Server -> CPU 10 | RAM 10 | HDD 10 / Available -> CPU 10 | RAM 10 | HDD 10');
 
-        $vm = new VM(new ServerResource(4,3,2));
+        $vm = VMFactory::create(4,3,2);
 
         // add VM first time
         $this->assertTrue($server->addVM($vm));
@@ -57,6 +54,7 @@ final class ServerTest extends TestCase
         unset($vm);
         unset($server);
     }
+
 
 
 }

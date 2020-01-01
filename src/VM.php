@@ -26,8 +26,13 @@ class VM
         $this->resource = $resource;
     }
 
-
-    public function getResource()
+    /*
+     * getResource
+     *
+     * Returns the VM´s needed resource
+     *
+     */
+    public function getResource() : ServerResource
     {
         return $this->resource;
     }

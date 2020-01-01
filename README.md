@@ -39,6 +39,8 @@ Installation
 ============
 
     composer require jomo77/server-planning
+    
+    composer create-project --prefer-dist --stability=dev jomo77/server-planning
 
 
 Test

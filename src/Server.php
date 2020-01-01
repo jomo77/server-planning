@@ -2,6 +2,7 @@
 
 namespace Jomo77\ServerPlanning;
 
+
 /**
  *  A Single Server for hosting multiple VMs
  *
@@ -50,7 +51,7 @@ class Server
      *
      * @return boolean
      */
-    public function addVM(VM $vm)
+    public function addVM(VM $vm) : bool
     {
         #If a virtual machine is too 'big' for a server, it should be skipped.
         if (!$this->resource->fits($vm->getResource())) {
@@ -68,6 +69,18 @@ class Server
         return false;
     }
 
+
+    /*
+     * countVMs
+     *
+     * Returns the number of VMs
+     *
+     * @return int
+     */
+    public function countVMs() : int
+    {
+        return count($this->vms);
+    }
 
     public function __toString()
     {

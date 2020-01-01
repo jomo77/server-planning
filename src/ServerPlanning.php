@@ -13,30 +13,35 @@ class ServerPlanning
 {
 
     /*
+     * calculate
+     *
      * Return the number of servers that is required, to host a non-empty collection of virtual machines
+     *
+     * @param Server $server represents a single Server
+     * @param Array $vms represents a not empty collection of virtual machines
+     *
+     * @return int
      */
-    public function calculate(Server $server, Array $vms)
+    public function calculate(Server $server, Array $vms) : int
     {
         if (!empty($vms)) {
-            $count = 1;
-            // Don´t touch the original Server
             $testServer = clone $server;
-            foreach ($vms as $vm) {
 
+            foreach ($vms as $vm) {
                 if ($testServer->addVM($vm)) {
-                    continue;
+                    $vm_added = array_shift($vms);
+                }else{
+                    return 1 + $this->calculate($server, $vms);
                 }
-                // Need one more Server for this VM
-                $count++;
-                // Clone the original server and try to add the VM again
-                $testServer = clone $server;
-                $testServer->addVM($vm);
             }
-            return $count;
+            return ($testServer->countVMs() > 0) ? 1 : 0;
         } else {
             throw new EmptyVMCollection('Empty VM Collection');
         }
 
     }
+
+
+
 
 }

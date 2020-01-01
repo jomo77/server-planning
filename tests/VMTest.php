@@ -1,7 +1,6 @@
 <?php
 
-use Jomo77\ServerPlanning\ServerResource;
-use Jomo77\ServerPlanning\VM;
+use Jomo77\ServerPlanning\Factories\VMFactory;
 use PHPUnit\Framework\TestCase;
 
 final class VMTest extends TestCase
@@ -11,8 +10,7 @@ final class VMTest extends TestCase
      */
     public function isThereAnySyntaxError()
     {
-        $serverResource = new ServerResource(1,2,3);
-        $var = new VM($serverResource);
+        $var = VMFactory::create(1,2,3);
         $this->assertTrue(is_object($var));
         unset($var);
     }
@@ -22,8 +20,7 @@ final class VMTest extends TestCase
      */
     public function ifResourceSet()
     {
-        $serverResource = new ServerResource(5,2,3);
-        $var = new VM($serverResource);
+        $var = VMFactory::create(5,2,3);
         $this->assertTrue($var == 'VM -> CPU 5 | RAM 2 | HDD 3');
         unset($var);
     }

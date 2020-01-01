@@ -1,10 +1,9 @@
 <?php
 
 use Jomo77\ServerPlanning\Exception\EmptyVMCollection;
-use Jomo77\ServerPlanning\Server;
+use Jomo77\ServerPlanning\Factories\ServerFactory;
+use Jomo77\ServerPlanning\Factories\VMFactory;
 use Jomo77\ServerPlanning\ServerPlanning;
-use Jomo77\ServerPlanning\ServerResource;
-use Jomo77\ServerPlanning\VM;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -33,12 +32,12 @@ final class ServerPlanningTest extends TestCase
     {
         $serverPlanning = new ServerPlanning();
 
-        $server = new Server(new ServerResource(2, 32, 100));
+        $server = ServerFactory::create(2,32,100);
 
         $vms = [
-            new VM(new ServerResource(1, 16, 10)),
-            new VM(new ServerResource(1, 16, 10)),
-            new VM(new ServerResource(2, 32, 100))
+            VMFactory::create(1, 16, 10),
+            VMFactory::create(1, 16, 10),
+            VMFactory::create(2, 32, 100)
         ];
 
         $this->assertTrue($serverPlanning->calculate($server, $vms) == 2);
@@ -53,15 +52,15 @@ final class ServerPlanningTest extends TestCase
     {
         $serverPlanning = new ServerPlanning();
 
-        $server = new Server(new ServerResource(2, 32, 100));
+        $server = ServerFactory::create(2,32,100);
 
         $vms = [
-            new VM(new ServerResource(1, 16, 10)),
-            new VM(new ServerResource(1, 16, 10)),
+            VMFactory::create(1, 16, 10),
+            VMFactory::create(1, 16, 10),
 
-            new VM(new ServerResource(1, 16, 200)), # Too Big - just Skip - do nothing
+            VMFactory::create(1, 16, 200), # Too Big - just Skip - do nothing
 
-            new VM(new ServerResource(2, 32, 100))
+            VMFactory::create(2, 32, 100)
         ];
 
         $this->assertTrue($serverPlanning->calculate($server, $vms) == 2);
@@ -76,34 +75,34 @@ final class ServerPlanningTest extends TestCase
     {
         $serverPlanning = new ServerPlanning();
 
-        $server = new Server(new ServerResource(2, 32, 100));
+        $server = ServerFactory::create(2,32,100);
 
         $vms = [
-            new VM(new ServerResource(1, 16, 10)),
-            new VM(new ServerResource(1, 16, 10)),
+            VMFactory::create(1, 16, 10),
+            VMFactory::create(1, 16, 10),
 
-            new VM(new ServerResource(1, 16, 0)), # Zero
+            VMFactory::create(1, 16, 0), # Zero
 
-            new VM(new ServerResource(2, 32, 100)),
+            VMFactory::create(2, 32, 100),
 
-            new VM(new ServerResource(2, 32, 100)),
+            VMFactory::create(2, 32, 100),
 
-            new VM(new ServerResource(0, 0, 0)), # Zero
-            new VM(new ServerResource(0, 0, 0)), # Zero
-            new VM(new ServerResource(0, 0, 0)), # Zero
-            new VM(new ServerResource(0, 0, 0)), # Zero
-            new VM(new ServerResource(0, 0, 0)), # Zero
-            new VM(new ServerResource(0, 0, 0)), # Zero
-            new VM(new ServerResource(0, 0, 0)), # Zero
-            new VM(new ServerResource(0, 0, 0)), # Zero
-            new VM(new ServerResource(0, 0, 0)), # Zero
-            new VM(new ServerResource(0, 0, 0)), # Zero
-            new VM(new ServerResource(0, 0, 0)), # Zero
-            new VM(new ServerResource(0, 0, 0)), # Zero
+            VMFactory::create(0, 0, 0), # Zero
+            VMFactory::create(0, 0, 0), # Zero
+            VMFactory::create(0, 0, 0), # Zero
+            VMFactory::create(0, 0, 0), # Zero
+            VMFactory::create(0, 0, 0), # Zero
+            VMFactory::create(0, 0, 0), # Zero
+            VMFactory::create(0, 0, 0), # Zero
+            VMFactory::create(0, 0, 0), # Zero
+            VMFactory::create(0, 0, 0), # Zero
+            VMFactory::create(0, 0, 0), # Zero
+            VMFactory::create(0, 0, 0), # Zero
+            VMFactory::create(0, 0, 0), # Zero
 
-            new VM(new ServerResource(0, 10, 0)), # Zero
-            new VM(new ServerResource(0, 10, 0)), # Zero
-            new VM(new ServerResource(0, 12, 0)) # Zero
+            VMFactory::create(0, 10, 0), # Zero
+            VMFactory::create(0, 10, 0), # Zero
+            VMFactory::create(0, 12, 0) # Zero
         ];
 
         $this->assertTrue($serverPlanning->calculate($server, $vms) == 5);
@@ -118,7 +117,7 @@ final class ServerPlanningTest extends TestCase
     {
         $serverPlanning = new ServerPlanning();
 
-        $server = new Server(new ServerResource(2, 32, 100));
+        $server = ServerFactory::create(2,32,100);
 
         $vms = [];
         $this->expectException(EmptyVMCollection::class);
@@ -135,15 +134,37 @@ final class ServerPlanningTest extends TestCase
     {
         $serverPlanning = new ServerPlanning();
 
-        $server = new Server(new ServerResource(2, 32, 100));
+        $server = ServerFactory::create(2,32,100);
 
-
-        $this->assertTrue($serverPlanning->calculate($server, [new VM(new ServerResource(1, 16, 10))]) == 1);
+        $this->assertTrue($serverPlanning->calculate($server, [VMFactory::create(1, 16, 10)]) == 1);
         unset($server);
     }
 
+    /**
+     * @test
+     */
+    public function VMsameAsServer()
+    {
+        $serverPlanning = new ServerPlanning();
 
+        $server = ServerFactory::create(2,32,100);
 
+        $this->assertTrue($serverPlanning->calculate($server, [VMFactory::create(2, 32, 100)]) == 1);
+        unset($server);
+    }
+
+    /**
+     * @test
+     */
+    public function VMisTooBig()
+    {
+        $serverPlanning = new ServerPlanning();
+
+        $server = ServerFactory::create(2,32,100);
+
+        $this->assertTrue($serverPlanning->calculate($server, [VMFactory::create(20, 320, 1000)]) == 0);
+        unset($server);
+    }
 
     /**
      * @test
@@ -156,21 +177,21 @@ final class ServerPlanningTest extends TestCase
         $ram = 12312154548;
         $hdd = 545454544543322;
 
-
-
-        $server = new Server(new ServerResource($cpu, $ram, $hdd));
+        $server = ServerFactory::create($cpu, $ram, $hdd);
 
         $vms = [
-            new VM(new ServerResource(1, 16, 10)),
-            new VM(new ServerResource(1, 16, 10)),
+            VMFactory::create(1, 16, 10),
+            VMFactory::create(1, 16, 10),
 
-            new VM(new ServerResource($cpu/2, $ram/2, $hdd/2)),
+            VMFactory::create($cpu/2, $ram/2, $hdd/2),
 
-            new VM(new ServerResource($cpu/2, $ram/2, $hdd/2))
+            VMFactory::create($cpu/2, $ram/2, $hdd/2)
         ];
 
         $this->assertTrue($serverPlanning->calculate($server, $vms) == 2);
         unset($server);
         unset($vms);
     }
+
+
 }
